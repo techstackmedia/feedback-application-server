@@ -10,6 +10,8 @@
 
 ## Description
 
+## Description
+
 1. `const express = require('express');`:
    This line imports the Express.js library, which is a web framework for Node.js. Express simplifies the process of building web applications and APIs by providing a set of methods and middleware for handling HTTP requests and responses.
 
@@ -35,15 +37,19 @@
    This line creates a Mongoose model based on the defined schema. The model represents the `Feedback` collection and provides an interface to interact with the database.
 
 9. Routes:
-   The code defines four routes that handle different HTTP methods (GET, POST, PATCH, DELETE) for the `/feedback` endpoint:
+   The code defines six routes that handle different HTTP methods (GET, POST, PATCH, DELETE) for the `/feedback` endpoint:
 
    a. `GET /feedback`: Retrieves all feedback documents from the MongoDB collection, sorts them in descending order based on the `id`, and sends the data as a JSON response.
 
-   b. `POST /feedback`: Creates a new feedback document based on the request body (`req.body`) and saves it to the MongoDB collection. It then sends the newly created feedback document as a JSON response with a status code 201 (Created).
+   b. `GET /feedback/:id`: Retrieves a specific feedback document from the MongoDB collection based on its unique identifier (`id`) specified in the URL. If the feedback document is found, it is sent as a JSON response. If not found, the server responds with a status code 404 (Not Found).
 
-   c. `PATCH /feedback/:id`: Updates an existing feedback document in the MongoDB collection. The `:id` parameter in the URL represents the unique identifier of the feedback to update. The updated feedback document is sent as a JSON response.
+   c. `POST /feedback`: Creates a new feedback document based on the request body (`req.body`) and saves it to the MongoDB collection. It then sends the newly created feedback document as a JSON response with a status code 201 (Created).
 
-   d. `DELETE /feedback/:id`: Deletes a feedback document from the MongoDB collection based on its unique identifier specified in the URL. The server responds with a status code 204 (No Content) to indicate successful deletion.
+   d. `PATCH /feedback/:id`: Updates an existing feedback document in the MongoDB collection. The `:id` parameter in the URL represents the unique identifier of the feedback to update. The updated feedback document is sent as a JSON response. If the feedback document is not found, the server responds with a status code 404 (Not Found).
+
+   e. `PUT /feedback/:id`: Updates an existing feedback document in the MongoDB collection using the `PUT` method. The `:id` parameter in the URL represents the unique identifier of the feedback to update. The updated feedback document is sent as a JSON response. If the feedback document is not found, the server responds with a status code 404 (Not Found).
+
+   f. `DELETE /feedback/:id`: Deletes a feedback document from the MongoDB collection based on its unique identifier specified in the URL. The server responds with a status code 204 (No Content) to indicate successful deletion. If the feedback document is not found, the server responds with a status code 404 (Not Found).
 
 10. Connect to MongoDB and Start the Server:
     The code connects to the MongoDB database using Mongoose and starts the Express server to listen for incoming requests on the specified port. If the connection to MongoDB is successful, it prints a message indicating that the server has started.

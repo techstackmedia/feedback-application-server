@@ -1,10 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const dotenv = require("dotenv");
-const db = require("debug")("app:db");
-const port = require("debug")("app:port");
-const bug = require("debug")("app:bug");
+const dotenv = require('dotenv');
+const db = require('debug')('app:db');
+const port = require('debug')('app:port');
+const bug = require('debug')('app:bug');
 
 dotenv.config();
 
@@ -26,6 +26,18 @@ const Feedback = mongoose.model('Feedback', feedbackSchema);
 app.get('/feedback', async (req, res) => {
   try {
     const feedback = await Feedback.find().sort({ id: -1 });
+    res.json(feedback);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/feedback/:id', async (req, res) => {
+  try {
+    const feedback = await Feedback.findById(req.params.id);
+    if (!feedback) {
+      return res.status(404).json({ error: 'Feedback not found' });
+    }
     res.json(feedback);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
@@ -54,6 +66,22 @@ app.patch('/feedback/:id', async (req, res) => {
   }
 });
 
+app.put('/feedback/:id', async (req, res) => {
+  try {
+    const updatedFeedback = await Feedback.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updatedFeedback) {
+      return res.status(404).json({ error: 'Feedback not found' });
+    }
+    res.json(updatedFeedback);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.delete('/feedback/:id', async (req, res) => {
   try {
     await Feedback.findByIdAndDelete(req.params.id);
@@ -64,13 +92,13 @@ app.delete('/feedback/:id', async (req, res) => {
 });
 
 // Connect to MongoDB and start the server
-mongoose.set("strictQuery", false);
+mongoose.set('strictQuery', false);
 mongoose
   .connect(process.env.DATABASE_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  }).then(() => db("MongoDB Connected"))
+  })
+  .then(() => db('MongoDB Connected'))
   .catch((err) => bug('Error connecting to MongoDB.', err.message));
-
 
 app.listen(PORT, () => port(`Server started on port ${PORT}`));
