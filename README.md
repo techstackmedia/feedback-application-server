@@ -250,4 +250,8 @@ Deploy your backend application on a platform of your choice. Below are some com
 - [Cyclic](https://cyclic.sh/)
 - [Heroku](https://www.heroku.com/)
 
+> **Note:**
+>
+> When deploying the backend, make sure you have the necessary environment variables and their values set in the .env file on the deployment platform. However, never set the port of your backend in the environment variable of your deploying platform.
+
 Please ensure you follow the platform-specific guidelines for deploying your backend application to ensure a smooth and successful deployment.
