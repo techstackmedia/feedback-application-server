@@ -9,7 +9,7 @@ const bug = require('debug')('app:bug');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.BACKEND_PORT; // Choose your desired port
+const PORT = process.env.BACKEND_PORT || 5000; // Choose your desired port
 
 // Middleware
 app.use(bodyParser.json());
