@@ -10,8 +10,6 @@
 
 ## Description
 
-## Description
-
 1. `const express = require('express');`:
    This line imports the Express.js library, which is a web framework for Node.js. Express simplifies the process of building web applications and APIs by providing a set of methods and middleware for handling HTTP requests and responses.
 
