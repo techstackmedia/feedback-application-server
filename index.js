@@ -58,7 +58,43 @@ app.post('/feedback', async (req, res) => {
   }
 });
 
-// ... (other routes remain the same)
+app.patch('/feedback/:id', async (req, res) => {
+  try {
+    const updatedFeedback = await Feedback.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json(updatedFeedback);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.put('/feedback/:id', async (req, res) => {
+  try {
+    const updatedFeedback = await Feedback.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updatedFeedback) {
+      return res.status(404).json({ error: 'Feedback not found' });
+    }
+    res.json(updatedFeedback);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.delete('/feedback/:id', async (req, res) => {
+  try {
+    await Feedback.findByIdAndDelete(req.params.id);
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // Connect to MongoDB and start the server
 mongoose.set('strictQuery', false);
