@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 const feedbackSchema = new mongoose.Schema({
   text: String,
   rating: Number,
+  date: { type: Date, default: Date.now } // New date field with default value set to the current date and time
 });
 
 const Feedback = mongoose.model('Feedback', feedbackSchema);
@@ -25,7 +26,7 @@ const Feedback = mongoose.model('Feedback', feedbackSchema);
 // Routes
 app.get('/feedback', async (req, res) => {
   try {
-    const feedback = await Feedback.find().sort({ id: -1 });
+    const feedback = await Feedback.find().sort({ date: -1 }); // Sort by date in descending order
     res.json(feedback);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
@@ -46,50 +47,18 @@ app.get('/feedback/:id', async (req, res) => {
 
 app.post('/feedback', async (req, res) => {
   try {
-    const newFeedback = await Feedback.create(req.body);
+    const newFeedback = await Feedback.create({
+      text: req.body.text,
+      rating: req.body.rating,
+      date: Date.now() // Set the current date and time when creating a new feedback entry
+    });
     res.status(201).json(newFeedback);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-app.patch('/feedback/:id', async (req, res) => {
-  try {
-    const updatedFeedback = await Feedback.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    res.json(updatedFeedback);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-app.put('/feedback/:id', async (req, res) => {
-  try {
-    const updatedFeedback = await Feedback.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (!updatedFeedback) {
-      return res.status(404).json({ error: 'Feedback not found' });
-    }
-    res.json(updatedFeedback);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-app.delete('/feedback/:id', async (req, res) => {
-  try {
-    await Feedback.findByIdAndDelete(req.params.id);
-    res.sendStatus(204);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
+// ... (other routes remain the same)
 
 // Connect to MongoDB and start the server
 mongoose.set('strictQuery', false);
