@@ -60,6 +60,7 @@ app.post('/feedback', async (req, res) => {
 
 app.patch('/feedback/:id', async (req, res) => {
   try {
+    req.body.date = Date.now(); // Set the current date and time in the request body
     const updatedFeedback = await Feedback.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -73,6 +74,7 @@ app.patch('/feedback/:id', async (req, res) => {
 
 app.put('/feedback/:id', async (req, res) => {
   try {
+    req.body.date = Date.now(); // Set the current date and time in the request body
     const updatedFeedback = await Feedback.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -86,6 +88,7 @@ app.put('/feedback/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 app.delete('/feedback/:id', async (req, res) => {
   try {
