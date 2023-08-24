@@ -28,7 +28,6 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {      
-  
   try {
     const feedback = await Feedback.findById(req.params.id);
     if (!feedback) {
