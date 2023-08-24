@@ -225,3 +225,21 @@ router.delete('/:id', async (req, res) => {
 
 module.exports = router;
 ```
+
+The modification above will result in a response (for example, a GET request) that appears as shown below:
+
+```json
+{
+    "feedback": [
+        {
+            "_id": "64cf0663cab171cf5ab1449f",
+            "text": "This is a new text",
+            "rating": 10,
+            "date": "2023-08-06T03:31:13.800Z",
+            "__v": 0
+        }
+    ],
+    "totalPages": 1,
+    "currentPage": 1
+}
+```
