@@ -1,7 +1,43 @@
 const express = require('express');
 const Feedback = require('../models/feedback');
+const multer = require('multer');
+const path = require('path');
 
 const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Uploads will be saved in the 'uploads' directory
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const originalExtension = path.extname(file.originalname);
+    cb(null, uniqueSuffix + originalExtension); // Use the original extension
+  },
+});
+
+const upload = multer({ storage: storage });
+
+router.post('/', upload.single('profileImage'), async (req, res) => {
+  try {
+    // console.log('Request Body:', req.body);
+    // console.log('Uploaded File:', req.file);
+
+    const newFeedback = await Feedback.create({
+      text: req.body.text,
+      rating: req.body.rating,
+      date: Date.now(),
+      profileImage: req.file.filename, // Save the filename of the uploaded image
+    });
+
+    console.log('New Feedback:', newFeedback);
+
+    res.status(201).json(newFeedback);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 router.get('/', async (req, res) => {
   try {
