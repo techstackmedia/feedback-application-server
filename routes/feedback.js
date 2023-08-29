@@ -5,8 +5,23 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const feedback = await Feedback.find().sort({ date: -1 });
-    res.json(feedback);
+    const page = parseInt(req.query.page) || 1; // Get the requested page number
+    const limit = 10; // Set the number of feedback items per page
+    const skip = (page - 1) * limit; // Calculate the number of items to skip
+    
+    const feedbackCount = await Feedback.countDocuments(); // Get the total count of feedback items
+    const totalPages = Math.ceil(feedbackCount / limit); // Calculate the total number of pages
+    
+    const feedback = await Feedback.find()
+      .sort({ date: -1 })
+      .skip(skip)
+      .limit(limit);
+    
+    res.json({
+      feedback,
+      totalPages,
+      currentPage: page,
+    });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
