@@ -85,27 +85,6 @@ router.post(
   }
 );
 
-// Add this route to your backend code
-router.get('/profile-image/:filename', async (req, res) => {
-  try {
-    const { filename } = req.params;
-    // Construct the Cloudinary URL based on the filename
-    const profileImageUrl = cloudinary.url(filename, {
-      width: 36, // Set the width to 36
-      height: 36, // Set the height to 36
-      crop: 'fill',
-      secure: true,
-      fetch_format: 'auto',
-    });
-    
-    res.json({ profileImage: profileImageUrl });
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-
 router.patch('/:id', async (req, res) => {
   try {
     req.body.date = Date.now();
