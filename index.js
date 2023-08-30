@@ -7,6 +7,7 @@ const port = require('debug')('app:port');
 const bug = require('debug')('app:bug');
 const feedbackRoutes = require('./routes/feedback');
 const cloudinary = require('cloudinary');
+const cors = require('cors');
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ const PORT = process.env.BACKEND_PORT || 5000;
 
 // Middleware
 app.use(bodyParser.json());
+app.use(cors());
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
