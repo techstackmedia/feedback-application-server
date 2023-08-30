@@ -1,5 +1,7 @@
 const express = require('express');
 const Feedback = require('../models/feedback');
+const multer = require('multer');
+const path = require('path');
 
 const router = express.Router();
 
@@ -30,9 +32,37 @@ router.post('/', async (req, res) => {
       text: req.body.text,
       rating: req.body.rating,
       date: Date.now(),
+      profile: req.body.profile, // Add the profile ObjectId here
     });
     res.status(201).json(newFeedback);
   } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Uploads will be saved in the 'uploads' directory
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const originalExtension = path.extname(file.originalname);
+    cb(null, uniqueSuffix + originalExtension); // Use the original extension
+  },
+});
+
+const upload = multer({ storage: storage }); // Define upload middleware here
+
+router.post('/upload-profile-image', upload.single('profileImage'), async (req, res) => {
+  try {
+    // console.log('Uploaded File:', req.file);
+
+    // Save the filename of the uploaded image in the user's profile or session
+    const profileImageFilename = req.file.filename;
+
+    res.status(201).json({ profileImage: profileImageFilename });
+  } catch (error) {
+    // console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
