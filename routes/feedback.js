@@ -65,7 +65,9 @@ router.post(
         return res.status(400).json({ error: 'No file uploaded' });
       }
 
-      const result = await cloudinary.uploader.upload(req.file.path);
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        resource_type: "image",
+      });
 
       if (!result || !result.secure_url) {
         return res
@@ -82,6 +84,27 @@ router.post(
     }
   }
 );
+
+// Add this route to your backend code
+router.get('/profile-image/:filename', async (req, res) => {
+  try {
+    const { filename } = req.params;
+    // Construct the Cloudinary URL based on the filename
+    const profileImageUrl = cloudinary.url(filename, {
+      width: 36, // Set the width to 36
+      height: 36, // Set the height to 36
+      crop: 'fill',
+      secure: true,
+      fetch_format: 'auto',
+    });
+    
+    res.json({ profileImage: profileImageUrl });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 router.patch('/:id', async (req, res) => {
   try {
