@@ -2,6 +2,7 @@ const express = require('express');
 const Feedback = require('../models/feedback');
 const multer = require('multer');
 const path = require('path');
+const cloudinary = require('cloudinary');
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {      
+router.get('/:id', async (req, res) => {
   try {
     const feedback = await Feedback.findById(req.params.id);
     if (!feedback) {
@@ -53,19 +54,34 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage }); // Define upload middleware here
 
-router.post('/upload-profile-image', upload.single('profileImage'), async (req, res) => {
-  try {
-    // console.log('Uploaded File:', req.file);
+router.post(
+  '/upload-profile-image',
+  upload.single('profileImage'),
+  async (req, res) => {
+    try {
+      // console.log('Uploaded File:', req.file); // Log the uploaded file information
 
-    // Save the filename of the uploaded image in the user's profile or session
-    const profileImageFilename = req.file.filename;
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
 
-    res.status(201).json({ profileImage: profileImageFilename });
-  } catch (error) {
-    // console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+      const result = await cloudinary.uploader.upload(req.file.path);
+
+      if (!result || !result.secure_url) {
+        return res
+          .status(500)
+          .json({ error: 'Image upload to Cloudinary failed' });
+      }
+      const profileImageUrl = result.secure_url;
+      // console.log('Profile Image URL:', profileImageUrl);
+
+      res.status(201).json({ profileImage: profileImageUrl });
+    } catch (error) {
+      // console.error('Error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
-});
+);
 
 router.patch('/:id', async (req, res) => {
   try {
