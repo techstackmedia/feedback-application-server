@@ -11,8 +11,9 @@ router.get('/', async (req, res) => {
     const feedback = await Feedback.find().sort({ date: -1 });
     res.json(feedback);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error', details: error.message });
-
+    res
+      .status(500)
+      .json({ error: 'Internal server error', details: error.message });
   }
 });
 
@@ -24,8 +25,9 @@ router.get('/:id', async (req, res) => {
     }
     res.json(feedback);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error', details: error.message });
-
+    res
+      .status(500)
+      .json({ error: 'Internal server error', details: error.message });
   }
 });
 
@@ -39,8 +41,9 @@ router.post('/', async (req, res) => {
     });
     res.status(201).json(newFeedback);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error', details: error.message });
-
+    res
+      .status(500)
+      .json({ error: 'Internal server error', details: error.message });
   }
 });
 
@@ -81,26 +84,12 @@ router.post(
       res.status(201).json({ profileImage: profileImageUrl });
     } catch (error) {
       console.error('Error:', error);
-      res.status(500).json({ error: 'Internal server error', details: error.message });
-
+      res
+        .status(500)
+        .json({ error: 'Internal server error', details: error.message });
     }
   }
 );
-
-router.get('/get-profile-image/:imageId', async (req, res) => {
-  try {
-    const imageId = req.params.imageId;
-    const cloudinaryUrl = cloudinary.url(imageId, {
-      secure: true,
-      resource_type: 'image',
-    });
-
-    res.json({ profileImage: cloudinaryUrl });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error', details: error.message });
-
-  }
-});
 
 router.patch('/:id', async (req, res) => {
   try {
@@ -112,8 +101,9 @@ router.patch('/:id', async (req, res) => {
     );
     res.json(updatedFeedback);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error', details: error.message });
-
+    res
+      .status(500)
+      .json({ error: 'Internal server error', details: error.message });
   }
 });
 
@@ -130,8 +120,9 @@ router.put('/:id', async (req, res) => {
     }
     res.json(updatedFeedback);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error', details: error.message });
-
+    res
+      .status(500)
+      .json({ error: 'Internal server error', details: error.message });
   }
 });
 
@@ -171,8 +162,9 @@ router.delete('/:id', async (req, res) => {
     await Feedback.findByIdAndDelete(req.params.id);
     res.sendStatus(204);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error', details: error.message });
-
+    res
+      .status(500)
+      .json({ error: 'Internal server error', details: error.message });
   }
 });
 
