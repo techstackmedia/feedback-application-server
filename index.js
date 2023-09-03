@@ -6,8 +6,12 @@ const db = require('debug')('app:db');
 const port = require('debug')('app:port');
 const bug = require('debug')('app:bug');
 const feedbackRoutes = require('./routes/feedback');
+const userRoutes = require('./routes/users'); // Add user routes
+const qrCodeRoutes = require('./routes/qrCodeSecret'); // Add user routes
 const cloudinary = require('cloudinary');
 const cors = require('cors');
+const passport = require('passport'); // Import Passport.js
+const session = require('express-session'); // Import express-session
 
 dotenv.config();
 
@@ -15,8 +19,15 @@ const app = express();
 const PORT = process.env.BACKEND_PORT || 5000;
 
 // Middleware
+app.use(cors()); // Apply cors middleware first
 app.use(bodyParser.json());
-app.use(cors());
+
+// Initialize session middleware
+app.use(session({ secret: 'your-secret', resave: false, saveUninitialized: false }));
+
+// Initialize Passport.js
+app.use(passport.initialize());
+app.use(passport.session());
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -36,5 +47,7 @@ mongoose
 
 // Routes
 app.use('/feedback', feedbackRoutes);
+app.use('/users', userRoutes); // Use user routes
+app.use('/users', qrCodeRoutes);
 
 app.listen(PORT, () => port(`Server started on port ${PORT}`));
