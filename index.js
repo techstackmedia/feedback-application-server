@@ -7,7 +7,8 @@ const port = require('debug')('app:port');
 const bug = require('debug')('app:bug');
 const feedbackRoutes = require('./routes/feedback');
 const userRoutes = require('./routes/users'); // Add user routes
-const qrCodeRoutes = require('./routes/qrCodeSecret'); // Add user routes
+const qrCodeRoutes = require('./routes/qrCodeSecret'); 
+const imageRoutes = require('./routes/images'); // Add user routes
 const cloudinary = require('cloudinary');
 const cors = require('cors');
 const passport = require('passport'); // Import Passport.js
@@ -49,5 +50,6 @@ mongoose
 app.use('/feedback', feedbackRoutes);
 app.use('/users', userRoutes); // Use user routes
 app.use('/users', qrCodeRoutes);
+app.use('/users', imageRoutes);
 
 app.listen(PORT, () => port(`Server started on port ${PORT}`));
